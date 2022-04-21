@@ -2,6 +2,8 @@ import { Button, Flex, Input, Text } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { useSetRecoilState } from "recoil"
 import { authModalState } from "../../../atoms/authModalAtom"
+import { auth } from "../../../firebase/clientApp"
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
 
 type SignUpProps = {}
 
@@ -14,14 +16,37 @@ const defaultStyle = {
 const SignUp: React.FC<SignUpProps> = () => {
   const setAuthModalState = useSetRecoilState(authModalState)
 
-  const [SignUpForm, setSignUpForm] = useState({
+  const [signUpForm, setSignUpForm] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   })
 
+  // Local Error state
+  const [error, setError] = useState("")
+
+  // Firebase Hooks to create User
+  const [createUserWithEmailAndPassword, user, loading, firebaseAuthError] =
+    useCreateUserWithEmailAndPassword(auth)
+
   //   Submit Logic
-  const handleSubmit = () => {}
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    // clear error state
+    if (error) {
+      setError("")
+    }
+
+    // check if passwords match
+    if (signUpForm.password !== signUpForm.confirmPassword) {
+      setError("Passwords Do Not Match")
+      return
+    }
+
+    // if all checks pass create users
+    createUserWithEmailAndPassword(signUpForm.email, signUpForm.password)
+  }
 
   //   OnChange Logic
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +69,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           name='email'
           placeholder='email'
           type='email'
+          required
           onChange={handleChange}
           _placeholder={{
             color: "gray.500",
@@ -61,6 +87,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           name='password'
           placeholder='password'
           type='password'
+          required
           onChange={handleChange}
           _placeholder={{
             color: "gray.500",
@@ -79,6 +106,7 @@ const SignUp: React.FC<SignUpProps> = () => {
           name='confirmPassword'
           placeholder='confirm password'
           type='password'
+          required
           onChange={handleChange}
           _placeholder={{
             color: "gray.500",
@@ -93,7 +121,13 @@ const SignUp: React.FC<SignUpProps> = () => {
           bg='gray.50'
         />
 
-        <Button type='submit' h='36px'>
+        {error && (
+          <Text textAlign='center' fontSize='10pt' color='red.500'>
+            {error}
+          </Text>
+        )}
+
+        <Button type='submit' h='36px' isLoading={loading}>
           Sign Up
         </Button>
 
