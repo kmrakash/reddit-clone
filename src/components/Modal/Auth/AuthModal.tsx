@@ -48,7 +48,7 @@ const AuthModal: React.FC = () => {
               justify='center'
               align='center'
               width='70%'
-              pb={2}
+              // pb={2}
             >
               {/* OauthButtons */}
               {/* AuthInputs */}

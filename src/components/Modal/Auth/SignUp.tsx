@@ -31,8 +31,14 @@ const SignUp: React.FC<SignUpProps> = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Flex direction='column' gap='2'>
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        // border: "1px solid blue",
+        width: "100%",
+      }}
+    >
+      <Flex direction='column' gap='2' width='100%'>
         <Input
           name='email'
           placeholder='email'
@@ -68,14 +74,17 @@ const SignUp: React.FC<SignUpProps> = () => {
           bg='gray.50'
         />
 
-        <Button type='submit'>Sign Up</Button>
+        <Button type='submit' h='36px'>
+          Sign Up
+        </Button>
 
         <Flex fontSize='9pt' justifyContent='center' gap='1'>
-          <Text>New to here ?</Text>
+          <Text>Already a Member ?</Text>
           <Text
             color='blue.500'
             fontWeight={700}
             cursor='pointer'
+            textTransform='uppercase'
             onClick={() => {
               setAuthModalState((prev) => ({
                 ...prev,
