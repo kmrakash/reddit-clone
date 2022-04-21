@@ -11,7 +11,7 @@ const Home: NextPage = () => {
           name='description'
           content='Reddit Clone using Nextjs Chakra-Ui Firebase Typescript'
         />
-        {/* <link rel='icon' href='/favicon.ico' /> */}
+        <link rel='icon' href='/images/redditFace.svg' />
       </Head>
       Main Content
     </div>
