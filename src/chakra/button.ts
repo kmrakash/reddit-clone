@@ -3,7 +3,7 @@ import { ComponentStyleConfig } from "@chakra-ui/react"
 export const Button: ComponentStyleConfig = {
   baseStyle: {
     borderRadius: "60px",
-    color: "brand.100",
+    // color: "brand.100",
     fontSize: "10pt",
     fontWeight: 700,
     _focus: {
