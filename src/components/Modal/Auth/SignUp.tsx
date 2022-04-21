@@ -17,6 +17,7 @@ const SignUp: React.FC<SignUpProps> = () => {
   const [SignUpForm, setSignUpForm] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
   })
 
   //   Submit Logic
@@ -59,6 +60,24 @@ const SignUp: React.FC<SignUpProps> = () => {
         <Input
           name='password'
           placeholder='password'
+          type='password'
+          onChange={handleChange}
+          _placeholder={{
+            color: "gray.500",
+          }}
+          _hover={{
+            ...defaultStyle,
+          }}
+          _focus={{
+            outline: "none",
+            ...defaultStyle,
+          }}
+          bg='gray.50'
+        />
+
+        <Input
+          name='confirmPassword'
+          placeholder='confirm password'
           type='password'
           onChange={handleChange}
           _placeholder={{
