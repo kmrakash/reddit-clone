@@ -121,9 +121,9 @@ const SignUp: React.FC<SignUpProps> = () => {
           bg='gray.50'
         />
 
-        {error && (
+        {(error || firebaseAuthError) && (
           <Text textAlign='center' fontSize='10pt' color='red.500'>
-            {error}
+            {error || firebaseAuthError?.message}
           </Text>
         )}
 
