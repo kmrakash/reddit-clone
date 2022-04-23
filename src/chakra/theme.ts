@@ -7,7 +7,7 @@ import "@fontsource/open-sans/700.css"
 
 //Import Components
 import { Button } from "./button"
-import { Input } from "./inputs"
+// import { Input } from "./inputs"
 
 export const theme = extendTheme({
   colors: {
