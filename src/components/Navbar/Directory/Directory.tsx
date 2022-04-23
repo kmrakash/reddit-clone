@@ -12,6 +12,7 @@ import React from "react"
 
 // React Icons
 import { TiHome } from "react-icons/ti"
+import Communities from "./Communities"
 
 const UserMenu: React.FC = () => {
   return (
@@ -40,7 +41,9 @@ const UserMenu: React.FC = () => {
           <ChevronDownIcon color='gray.500' fontSize={20} />
         </Flex>
       </MenuButton>
-      <MenuList>Communities</MenuList>
+      <MenuList>
+        <Communities />
+      </MenuList>
     </Menu>
   )
 }
