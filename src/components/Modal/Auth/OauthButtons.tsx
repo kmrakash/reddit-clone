@@ -1,10 +1,28 @@
 import { Button, Image, Stack, Text } from "@chakra-ui/react"
-import React from "react"
+import { User } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
+import React, { useEffect } from "react"
 import { useSignInWithGoogle } from "react-firebase-hooks/auth"
-import { auth } from "../../../firebase/clientApp"
+import { auth, firestore } from "../../../firebase/clientApp"
 
 const OauthButtons: React.FC = () => {
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth)
+  const [signInWithGoogle, userCred, loading, error] = useSignInWithGoogle(auth)
+
+  // A function to create user collection on firestore on new sign ups
+  const handleCreateUserDocument = async (user: User) => {
+    try {
+      const userDocRef = doc(firestore, "users", user.uid)
+      await setDoc(userDocRef, JSON.parse(JSON.stringify(user)))
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (userCred) {
+      handleCreateUserDocument(userCred.user)
+    }
+  }, [userCred])
 
   return (
     <Stack mb={2} width='100%'>

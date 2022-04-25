@@ -1,9 +1,11 @@
 import { Button, Flex, Input, Text } from "@chakra-ui/react"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useSetRecoilState } from "recoil"
 import { authModalState } from "../../../atoms/authModalAtom"
-import { auth } from "../../../firebase/clientApp"
+import { auth, firestore } from "../../../firebase/clientApp"
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
+import { User } from "firebase/auth"
+import { addDoc, collection } from "firebase/firestore"
 
 type SignUpProps = {}
 
@@ -26,7 +28,7 @@ const SignUp: React.FC<SignUpProps> = () => {
   const [error, setError] = useState("")
 
   // Firebase Hooks to create User
-  const [createUserWithEmailAndPassword, user, loading, firebaseAuthError] =
+  const [createUserWithEmailAndPassword, userCred, loading, firebaseAuthError] =
     useCreateUserWithEmailAndPassword(auth)
 
   //   Submit Logic
@@ -47,6 +49,24 @@ const SignUp: React.FC<SignUpProps> = () => {
     // if all checks pass create users
     createUserWithEmailAndPassword(signUpForm.email, signUpForm.password)
   }
+
+  // A function to create user collection on firestore on new sign ups
+  const handleCreateUserDocument = async (user: User) => {
+    try {
+      await addDoc(
+        collection(firestore, "users"),
+        JSON.parse(JSON.stringify(user))
+      )
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if (userCred) {
+      handleCreateUserDocument(userCred.user)
+    }
+  }, [userCred])
 
   //   OnChange Logic
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
