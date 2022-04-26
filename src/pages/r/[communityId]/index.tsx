@@ -7,6 +7,7 @@ import { firestore } from "../../../firebase/clientApp"
 import safeJsonStringify from "safe-json-stringify"
 import CommunityNotFound from "../../../components/Community/CommunityNotFound"
 import Header from "../../../components/Community/Header"
+import PageContent from "../../../components/Layout/PageContent"
 
 type CommunityPageProps = {
   communityData: Community
@@ -27,7 +28,10 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
         <link rel='icon' href='/images/redditFace.svg' />
       </Head>
       <Header communityData={communityData} />
-      <h1> Welcome to {communityData.communityId} </h1>
+      <PageContent>
+        <>LHS children</>
+        <>RHS children</>
+      </PageContent>
     </>
   )
 }
