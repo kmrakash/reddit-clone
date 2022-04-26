@@ -5,15 +5,14 @@ import React from "react"
 import { Community } from "../../../atoms/communityAtom"
 import { firestore } from "../../../firebase/clientApp"
 import safeJsonStringify from "safe-json-stringify"
-import CommunityNotFound from "../../../components/Modal/Community/CommunityNotFound"
+import CommunityNotFound from "../../../components/Community/CommunityNotFound"
+import Header from "../../../components/Community/Header"
 
 type CommunityPageProps = {
   communityData: Community
 }
 
 const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
-  console.log("Community Data: ", communityData)
-
   // Not Found Page
   if (!communityData) return <CommunityNotFound />
 
@@ -27,6 +26,7 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
         />
         <link rel='icon' href='/images/redditFace.svg' />
       </Head>
+      <Header communityData={communityData} />
       <h1> Welcome to {communityData.communityId} </h1>
     </>
   )
