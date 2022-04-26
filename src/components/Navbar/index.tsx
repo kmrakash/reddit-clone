@@ -13,9 +13,9 @@ const Navbar: React.FC = () => {
     <Flex bg='white' h='44px' p='6px 12px' justify='space-between'>
       {/* Logo */}
       <Flex align='center'>
-        <Image src='./images/redditFace.svg' alt='Reddit Face' h='30px' />
+        <Image src='/images/redditFace.svg' alt='Reddit Face' h='30px' />
         <Image
-          src='./images/redditText.svg'
+          src='/images/redditText.svg'
           alt='Reddit Text'
           h='46px'
           display={{
