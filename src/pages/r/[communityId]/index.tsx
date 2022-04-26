@@ -5,6 +5,7 @@ import React from "react"
 import { Community } from "../../../atoms/communityAtom"
 import { firestore } from "../../../firebase/clientApp"
 import safeJsonStringify from "safe-json-stringify"
+import CommunityNotFound from "../../../components/Modal/Community/CommunityNotFound"
 
 type CommunityPageProps = {
   communityData: Community
@@ -12,10 +13,14 @@ type CommunityPageProps = {
 
 const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
   console.log("Community Data: ", communityData)
+
+  // Not Found Page
+  if (!communityData) return <CommunityNotFound />
+
   return (
     <>
       <Head>
-        <title>{communityData.communityId}</title>
+        <title> r/{communityData.communityId}</title>
         <meta
           name='description'
           content='Reddit Clone using Nextjs Chakra-Ui Firebase Typescript'
@@ -39,12 +44,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     return {
       props: {
-        communityData: JSON.parse(
-          safeJsonStringify({
-            communityId: communityDoc.id,
-            ...communityDoc.data(),
-          })
-        ),
+        communityData: communityDoc.exists()
+          ? JSON.parse(
+              safeJsonStringify({
+                communityId: communityDoc.id,
+                ...communityDoc.data(),
+              })
+            )
+          : "",
       },
     }
   } catch (error) {
