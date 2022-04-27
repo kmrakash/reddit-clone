@@ -19,8 +19,9 @@ import { IoSparkles } from "react-icons/io5"
 import { CgProfile } from "react-icons/cg"
 import { MdOutlineLogin } from "react-icons/md"
 import { auth } from "../../../firebase/clientApp"
-import { useSetRecoilState } from "recoil"
+import { useResetRecoilState, useSetRecoilState } from "recoil"
 import { authModalState } from "../../../atoms/authModalAtom"
+import { communityState } from "../../../atoms/communityAtom"
 
 type UserMenuProps = {
   user?: User | null
@@ -28,6 +29,11 @@ type UserMenuProps = {
 
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
   const setAuthModelState = useSetRecoilState(authModalState)
+  const resetCommunityState = useResetRecoilState(communityState)
+  const logout = () => {
+    signOut(auth)
+    resetCommunityState()
+  }
 
   return (
     <Menu>
@@ -84,7 +90,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
               fontSize='10pt'
               fontWeight={700}
               _hover={{ bg: "blue.500", color: "white" }}
-              onClick={() => signOut(auth)}
+              onClick={logout}
             >
               <Flex align='center' gap={2}>
                 <Icon as={MdOutlineLogin} fontSize={22} />

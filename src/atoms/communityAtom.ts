@@ -19,10 +19,17 @@ export interface CommunitySnippet {
 
 // Snippets state
 interface CommunityState {
-  // mySnippets
+  mySnippets: CommunitySnippet[]
   // visitedCommunities
 }
 
 // Default State of Community State
+const defaultCommunityState: CommunityState = {
+  mySnippets: [],
+}
 
 // Recoil Atomo for Community State
+export const communityState = atom<CommunityState>({
+  key: "communities",
+  default: defaultCommunityState,
+})
