@@ -1,4 +1,10 @@
-import { collection, getDocs } from "firebase/firestore"
+import {
+  collection,
+  doc,
+  getDocs,
+  increment,
+  writeBatch,
+} from "firebase/firestore"
 import { useEffect, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useRecoilState } from "recoil"
@@ -22,13 +28,13 @@ const useCommunityData = () => {
     isJoined: boolean
   ) => {
     // check is user is authenticated
-
+    setLoading(true)
     if (isJoined) {
-      leaveCommunity()
+      leaveCommunity(communityData.id)
       return
     }
 
-    joinCommunity()
+    joinCommunity(communityData)
   }
 
   // Fetch community Snippets of a user from firebase
@@ -51,8 +57,68 @@ const useCommunityData = () => {
     setLoading(false)
   }
 
-  const joinCommunity = () => {}
-  const leaveCommunity = () => {}
+  const joinCommunity = async (communityData: Community) => {
+    try {
+      const batch = writeBatch(firestore)
+
+      // create new Snippet
+      const newSnippet: CommunitySnippet = {
+        communityId: communityData.id,
+        imageURL: communityData.imageURL || "",
+      }
+
+      // update user snippets with communityData (new Snippet)
+      batch.set(
+        doc(firestore, `users/${user?.uid}/communitySnippet`, communityData.id),
+        newSnippet
+      )
+      // increament of Number of Member
+      batch.update(doc(firestore, "communities", communityData.id), {
+        numberOfMembers: increment(1),
+      })
+
+      await batch.commit()
+
+      // update recoil state - community mysnippets
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: [...prev.mySnippets, newSnippet],
+      }))
+    } catch (error: any) {
+      console.log("Join Community Error", error)
+      setError(error.message)
+    }
+
+    setLoading(false)
+  }
+  const leaveCommunity = async (communityId: string) => {
+    try {
+      const batch = writeBatch(firestore)
+
+      // update user snippets with communityData (new Snippet)
+      batch.delete(
+        doc(firestore, `users/${user?.uid}/communitySnippet`, communityId)
+      )
+      // increament of Number of Member
+      batch.update(doc(firestore, "communities", communityId), {
+        numberOfMembers: increment(-1),
+      })
+
+      await batch.commit()
+
+      // update recoil state - community mysnippets
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: prev.mySnippets.filter(
+          (item) => item.communityId !== communityId
+        ),
+      }))
+    } catch (error: any) {
+      console.log("leave community Error-->", error)
+      setError(error.message)
+    }
+    setLoading(false)
+  }
 
   useEffect(() => {
     if (user) {
