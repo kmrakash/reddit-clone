@@ -20,7 +20,7 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
   return (
     <>
       <Head>
-        <title> r/{communityData.communityId}</title>
+        <title> r/{communityData.id}</title>
         <meta
           name='description'
           content='Reddit Clone using Nextjs Chakra-Ui Firebase Typescript'
@@ -51,7 +51,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         communityData: communityDoc.exists()
           ? JSON.parse(
               safeJsonStringify({
-                communityId: communityDoc.id,
+                id: communityDoc.id,
                 ...communityDoc.data(),
               })
             )
@@ -60,6 +60,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     }
   } catch (error) {
     console.error("[GET SERVERSIDE PROPS ERROR] -->", error)
+    return {
+      props: {
+        communityData: "",
+      },
+    }
   }
 }
 export default CommunityPage

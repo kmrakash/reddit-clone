@@ -6,10 +6,10 @@ type pageContentProps = {
 }
 
 const pageContent: React.FC<pageContentProps> = ({ children }) => {
-  console.log("Children", children)
+  // console.log("Children", children)
   return (
     <Flex justify='center' py='16px'>
-      <Flex width='95%' justify='center' maxWidth='860px'>
+      <Flex width='95%' justify='center' maxWidth='984px'>
         {/* Left Content */}
         <Flex
           direction='column'

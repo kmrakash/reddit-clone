@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({ communityData }) => {
     <Flex direction='column' height='146px' width='100%'>
       <Box bg='blue.500' height='50%' />
       <Flex height='50%' justifyContent='center' bg='white'>
-        <Flex width='95%' maxWidth='860px'>
+        <Flex width='95%' maxWidth='984px'>
           <Icon
             as={FaReddit}
             fontSize={64}
@@ -27,10 +27,10 @@ const Header: React.FC<HeaderProps> = ({ communityData }) => {
           <Flex padding='10px 16px' gap='5'>
             <Stack height='max-content'>
               <Text fontWeight={800} fontSize='16pt'>
-                {communityData.communityId}
+                {communityData.id}
               </Text>
               <Text fontWeight={600} fontSize='10pt' color='gray.400'>
-                r/{communityData.communityId}
+                r/{communityData.id}
               </Text>
             </Stack>
             <Flex>
