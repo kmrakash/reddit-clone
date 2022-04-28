@@ -19,6 +19,7 @@ const TabItem: React.FC<TabItemProps> = ({ item }) => {
       cursor='pointer'
       w='100%'
       //   border='1px solid red'
+      borderRight='1px solid'
       p='14px 0'
       gap={2}
       fontWeight={700}

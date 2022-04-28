@@ -4,6 +4,7 @@ import { BsLink45Deg, BsMic } from "react-icons/bs"
 import { BiPoll } from "react-icons/bi"
 import { IoDocumentText, IoImageOutline } from "react-icons/io5"
 import TabItem from "./TabItem"
+import TextInputs from "./TextInputs"
 
 type NewPostFormProps = {}
 
@@ -33,7 +34,7 @@ const formTabs = [
 const NewPostForm: React.FC<NewPostFormProps> = () => {
   return (
     <Tabs bg='white' mt={4}>
-      <TabList>
+      <TabList color='gray.500' borderBottom='1px solid'>
         {formTabs.map((item) => (
           <Tab flexGrow={1} p={0} key={item.title}>
             <TabItem item={item} />
@@ -43,7 +44,7 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
 
       <TabPanels>
         <TabPanel>
-          <p>one!</p>
+          <TextInputs />
         </TabPanel>
         <TabPanel>
           <p>two!</p>
