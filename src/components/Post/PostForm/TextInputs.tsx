@@ -26,12 +26,12 @@ const TextInputs: React.FC<TextInputsProps> = () => {
         }}
       />
       <Divider />
-      <Flex justify='end' gap={4}>
+      {/* <Flex justify='end' gap={4}>
         <Button variant='outline' h='30px'>
           Cancle
         </Button>
         <Button h='30px'>Post</Button>
-      </Flex>
+      </Flex> */}
     </Stack>
   )
 }

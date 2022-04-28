@@ -1,10 +1,19 @@
-import { Tabs, TabList, Tab, TabPanels, TabPanel } from "@chakra-ui/react"
+import {
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Button,
+  Flex,
+} from "@chakra-ui/react"
 import React from "react"
 import { BsLink45Deg, BsMic } from "react-icons/bs"
 import { BiPoll } from "react-icons/bi"
 import { IoDocumentText, IoImageOutline } from "react-icons/io5"
 import TabItem from "./TabItem"
 import TextInputs from "./TextInputs"
+import ImageUpload from "./ImageUpload"
 
 type NewPostFormProps = {}
 
@@ -47,12 +56,33 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
           <TextInputs />
         </TabPanel>
         <TabPanel>
-          <p>two!</p>
+          <ImageUpload />
         </TabPanel>
         <TabPanel>
-          <p>three!</p>
+          <p>Link Feature comming soon</p>
+        </TabPanel>
+        <TabPanel>
+          <p>Poll Feature comming soon</p>
+        </TabPanel>
+        <TabPanel>
+          <p>Talk Feature comming soon</p>
         </TabPanel>
       </TabPanels>
+      <Flex justify='end' gap={4} m={4}>
+        <Button variant='outline' h='30px'>
+          Cancle
+        </Button>
+        <Button
+          h='30px'
+          disabled
+          _disabled={{
+            bg: "#ddd",
+            cursor: "not-allowed",
+          }}
+        >
+          Post
+        </Button>
+      </Flex>
     </Tabs>
   )
 }
