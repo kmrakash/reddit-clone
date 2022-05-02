@@ -6,6 +6,7 @@ type ImageUploadProps = {
   setSelectedFile: (value: string) => void
   selectFileRef: React.RefObject<HTMLInputElement>
   onSelectImage: (event: React.ChangeEvent<HTMLInputElement>) => void
+  handleTabsChange: (index: number) => void
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -13,6 +14,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   setSelectedFile,
   selectFileRef,
   onSelectImage,
+  handleTabsChange,
 }) => {
   return (
     <Stack justify='center' align='center'>
@@ -33,7 +35,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             >
               Remove
             </Button>
-            <Button h='28px'>Back To Post</Button>
+            <Button h='28px' onClick={() => handleTabsChange(0)}>
+              Back To Post
+            </Button>
           </Flex>
         </>
       ) : (

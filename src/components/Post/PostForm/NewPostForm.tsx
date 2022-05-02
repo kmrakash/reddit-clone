@@ -44,6 +44,13 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
   const [selectedFile, setSelectedFile] = useState<string>("")
   // Reference to hidden file inputs
   const selectFileRef = useRef<HTMLInputElement>(null)
+  // Tab Index State
+  const [tabIndex, setTabIndex] = useState<number>(0)
+
+  // Tab Change Handle Event
+  const handleTabsChange = (index: number) => {
+    setTabIndex(index)
+  }
 
   // A function to store data url of files
   const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +67,7 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
   }
 
   return (
-    <Tabs bg='white' mt={4}>
+    <Tabs bg='white' mt={4} index={tabIndex} onChange={handleTabsChange}>
       <TabList color='gray.500' borderBottom='1px solid'>
         {formTabs.map((item) => (
           <Tab flexGrow={1} p={0} key={item.title}>
@@ -79,6 +86,7 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
             setSelectedFile={setSelectedFile}
             selectFileRef={selectFileRef}
             onSelectImage={onSelectImage}
+            handleTabsChange={handleTabsChange}
           />
         </TabPanel>
         <TabPanel>
