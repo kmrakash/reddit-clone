@@ -6,6 +6,8 @@ import {
   TabPanel,
   Button,
   Flex,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react"
 import React, { useRef, useState } from "react"
 import { BsLink45Deg, BsMic } from "react-icons/bs"
@@ -66,6 +68,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
   // Tab Index State
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
+  const [error, setError] = useState("")
 
   // Tab Change Handle Event
   const handleTabsChange = (index: number) => {
@@ -75,6 +78,11 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
   // Handle Event For Creating a new Post
   const handleCreatePost = async () => {
     const { communityId } = router.query
+
+    // Reset Error State
+    if (error) {
+      setError("")
+    }
 
     setLoading(true)
 
@@ -101,8 +109,9 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
           imageUrl: downloadUrl,
         })
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log("Handle Create Post Error", error)
+      setError(error.message)
     }
 
     setLoading(false)
@@ -188,6 +197,14 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
           Post
         </Button>
       </Flex> */}
+      {error && (
+        <>
+          <Alert status='error' variant='left-accent'>
+            <AlertIcon />
+            {error}
+          </Alert>
+        </>
+      )}
     </Tabs>
   )
 }
