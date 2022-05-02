@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Post } from "../../atoms/postAtom"
 
 // React Icons
@@ -13,7 +13,7 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5"
-import { Flex, Icon, Stack, Text, Image } from "@chakra-ui/react"
+import { Flex, Icon, Stack, Text, Image, Skeleton } from "@chakra-ui/react"
 import moment from "moment"
 
 type PostItemProps = {
@@ -33,6 +33,8 @@ const PostItem: React.FC<PostItemProps> = ({
   userIsCreator,
   userVoteValue,
 }) => {
+  const [loadingImage, setLoadingImage] = useState(true)
+
   return (
     <Flex
       bg='white'
@@ -92,7 +94,14 @@ const PostItem: React.FC<PostItemProps> = ({
         <Text>{post.body}</Text>
         {post.imageUrl && (
           <Flex justify='center' align='center'>
-            <Image src={post.imageUrl} alt='post Image' maxH='480px' />
+            {loadingImage && <Skeleton h='200px' w='100%' borderRadius={4} />}
+            <Image
+              src={post.imageUrl}
+              alt='post Image'
+              maxH='480px'
+              display={loadingImage ? "none" : "unset"}
+              onLoad={() => setLoadingImage(false)}
+            />
           </Flex>
         )}
         <Flex fontSize='10pt' color='gray.500' fontWeight={600}>
