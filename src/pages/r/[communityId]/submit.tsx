@@ -7,7 +7,7 @@ import { auth } from "../../../firebase/clientApp"
 
 type submitProps = {}
 
-const submit: React.FC<submitProps> = () => {
+const Submit: React.FC<submitProps> = () => {
   const [user] = useAuthState(auth)
   return (
     <PageContent>
@@ -22,4 +22,4 @@ const submit: React.FC<submitProps> = () => {
     </PageContent>
   )
 }
-export default submit
+export default Submit
