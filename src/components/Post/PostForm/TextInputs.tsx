@@ -6,12 +6,19 @@ type TextInputsProps = {
     title?: string
     body?: string
   }
+  loading: boolean
   onTextChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void
+  handleCreatePost: () => void
 }
 
-const TextInputs: React.FC<TextInputsProps> = ({ textInput, onTextChange }) => {
+const TextInputs: React.FC<TextInputsProps> = ({
+  textInput,
+  onTextChange,
+  handleCreatePost,
+  loading,
+}) => {
   return (
     <Stack spacing={4}>
       <Input
@@ -44,7 +51,12 @@ const TextInputs: React.FC<TextInputsProps> = ({ textInput, onTextChange }) => {
         {/* <Button variant='outline' h='30px'>
           Cancle
         </Button> */}
-        <Button h='30px' disabled={!textInput.title}>
+        <Button
+          h='30px'
+          disabled={!textInput.title}
+          isLoading={loading}
+          onClick={handleCreatePost}
+        >
           Post
         </Button>
       </Flex>

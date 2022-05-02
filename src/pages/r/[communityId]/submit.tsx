@@ -1,11 +1,14 @@
 import { Box, Text } from "@chakra-ui/react"
 import React from "react"
+import { useAuthState } from "react-firebase-hooks/auth"
 import PageContent from "../../../components/Layout/PageContent"
 import NewPostForm from "../../../components/Post/PostForm/NewPostForm"
+import { auth } from "../../../firebase/clientApp"
 
 type submitProps = {}
 
 const submit: React.FC<submitProps> = () => {
+  const [user] = useAuthState(auth)
   return (
     <PageContent>
       <>
@@ -13,7 +16,7 @@ const submit: React.FC<submitProps> = () => {
           <Text fontWeight={600}>Create a post</Text>
         </Box>
         {/* NewPostForm */}
-        <NewPostForm />
+        {user && <NewPostForm user={user} />}
       </>
       <>RHS</>
     </PageContent>
