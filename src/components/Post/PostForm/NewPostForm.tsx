@@ -7,7 +7,7 @@ import {
   Button,
   Flex,
 } from "@chakra-ui/react"
-import React from "react"
+import React, { useRef, useState } from "react"
 import { BsLink45Deg, BsMic } from "react-icons/bs"
 import { BiPoll } from "react-icons/bi"
 import { IoDocumentText, IoImageOutline } from "react-icons/io5"
@@ -41,6 +41,24 @@ const formTabs = [
 ]
 
 const NewPostForm: React.FC<NewPostFormProps> = () => {
+  const [selectedFile, setSelectedFile] = useState<string>("")
+  // Reference to hidden file inputs
+  const selectFileRef = useRef<HTMLInputElement>(null)
+
+  // A function to store data url of files
+  const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const reader = new FileReader()
+    if (event.target.files?.[0]) {
+      reader.readAsDataURL(event.target.files[0])
+    }
+
+    reader.onload = (readerEvent) => {
+      if (readerEvent.target?.result) {
+        setSelectedFile(readerEvent.target.result as string)
+      }
+    }
+  }
+
   return (
     <Tabs bg='white' mt={4}>
       <TabList color='gray.500' borderBottom='1px solid'>
@@ -56,7 +74,12 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
           <TextInputs />
         </TabPanel>
         <TabPanel>
-          <ImageUpload />
+          <ImageUpload
+            selectedFile={selectedFile}
+            setSelectedFile={setSelectedFile}
+            selectFileRef={selectFileRef}
+            onSelectImage={onSelectImage}
+          />
         </TabPanel>
         <TabPanel>
           <p>Link Feature comming soon</p>
@@ -68,7 +91,7 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
           <p>Talk Feature comming soon</p>
         </TabPanel>
       </TabPanels>
-      <Flex justify='end' gap={4} m={4}>
+      {/* <Flex justify='end' gap={4} m={4}>
         <Button variant='outline' h='30px'>
           Cancle
         </Button>
@@ -82,7 +105,7 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
         >
           Post
         </Button>
-      </Flex>
+      </Flex> */}
     </Tabs>
   )
 }
