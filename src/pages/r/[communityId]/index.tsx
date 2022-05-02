@@ -10,6 +10,7 @@ import Header from "../../../components/Community/Header"
 import PageContent from "../../../components/Layout/PageContent"
 import CreatePostLink from "../../../components/Community/CreatePostLink"
 import { useAuthState } from "react-firebase-hooks/auth"
+import Posts from "../../../components/Post/Posts"
 
 type CommunityPageProps = {
   communityData: Community
@@ -33,7 +34,10 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
       </Head>
       <Header communityData={communityData} />
       <PageContent>
-        <>{user && <CreatePostLink />}</>
+        <>
+          {user && <CreatePostLink />}
+          <Posts communityData={communityData} />
+        </>
         <>RHS children</>
       </PageContent>
     </>
