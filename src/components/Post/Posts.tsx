@@ -1,15 +1,29 @@
+import { Stack } from "@chakra-ui/react"
 import { collection, getDocs, query, where } from "firebase/firestore"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { Community } from "../../atoms/communityAtom"
+import { Post } from "../../atoms/postAtom"
 import { firestore } from "../../firebase/clientApp"
+import usePosts from "../../hooks/usePosts"
+import PostItem from "./PostItem"
 
 type PostsProps = {
   communityData: Community
+  userId: string
 }
 
-const Posts: React.FC<PostsProps> = ({ communityData }) => {
+const Posts: React.FC<PostsProps> = ({ communityData, userId }) => {
+  const [loading, setLoading] = useState(false)
+  const {
+    postStateValue,
+    setPostStateValue,
+    onVote,
+    onSelectPost,
+    onDeletePost,
+  } = usePosts()
   // Fetch Community Post on component Mounts
   const getPosts = async () => {
+    setLoading(true)
     try {
       const postQuery = query(
         collection(firestore, "posts"),
@@ -23,16 +37,40 @@ const Posts: React.FC<PostsProps> = ({ communityData }) => {
         ...doc.data(),
       }))
 
+      setPostStateValue((prev) => ({
+        ...prev,
+        posts: posts as Post[],
+      }))
+
       console.log("Posts", posts)
     } catch (error) {
       console.log("Posts Error", error)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
     getPosts()
   })
 
-  return <div>Posts</div>
+  return (
+    <>
+      <Stack mt={4}>
+        {postStateValue.posts.map((post) => {
+          return (
+            <PostItem
+              key={post.id}
+              post={post}
+              onVote={onVote}
+              onSelectPost={onSelectPost}
+              onDeletePost={onDeletePost}
+              userIsCreator={userId === post.creatorId}
+              userVoteValue={0}
+            />
+          )
+        })}
+      </Stack>
+    </>
+  )
 }
 export default Posts

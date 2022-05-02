@@ -28,3 +28,14 @@ Note : check if communityId is valid
         selectedPost : Post | null
         posts: Post[]
 ```
+
+# usePosts --> custom hook
+
+- states
+
+  - postsStateValue
+
+- functions
+  - onvote
+  - OnSelectPost
+  - onDeletePost

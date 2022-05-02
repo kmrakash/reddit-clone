@@ -4,8 +4,6 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Button,
-  Flex,
   Alert,
   AlertIcon,
 } from "@chakra-ui/react"
@@ -109,13 +107,13 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
           imageUrl: downloadUrl,
         })
       }
+      router.push(`/r/${communityId}`)
     } catch (error: any) {
       console.log("Handle Create Post Error", error)
       setError(error.message)
     }
 
     setLoading(false)
-    router.push(`/r/${communityId}`)
   }
 
   // A function to store data url of files

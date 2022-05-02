@@ -36,7 +36,7 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
       <PageContent>
         <>
           {user && <CreatePostLink />}
-          <Posts communityData={communityData} />
+          <Posts communityData={communityData} userId={user?.uid} />
         </>
         <>RHS children</>
       </PageContent>
