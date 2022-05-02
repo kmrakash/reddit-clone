@@ -42,6 +42,10 @@ const formTabs = [
 
 const NewPostForm: React.FC<NewPostFormProps> = () => {
   const [selectedFile, setSelectedFile] = useState<string>("")
+  const [textInput, setTextInput] = useState({
+    title: "",
+    body: "",
+  })
   // Reference to hidden file inputs
   const selectFileRef = useRef<HTMLInputElement>(null)
   // Tab Index State
@@ -66,6 +70,18 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
     }
   }
 
+  // Text change Handle Event Function
+  const onTextChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target
+
+    setTextInput((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
   return (
     <Tabs bg='white' mt={4} index={tabIndex} onChange={handleTabsChange}>
       <TabList color='gray.500' borderBottom='1px solid'>
@@ -78,7 +94,7 @@ const NewPostForm: React.FC<NewPostFormProps> = () => {
 
       <TabPanels>
         <TabPanel>
-          <TextInputs />
+          <TextInputs textInput={textInput} onTextChange={onTextChange} />
         </TabPanel>
         <TabPanel>
           <ImageUpload

@@ -1,14 +1,25 @@
 import { Button, Divider, Flex, Input, Stack, Textarea } from "@chakra-ui/react"
 import React from "react"
 
-type TextInputsProps = {}
+type TextInputsProps = {
+  textInput: {
+    title?: string
+    body?: string
+  }
+  onTextChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
+}
 
-const TextInputs: React.FC<TextInputsProps> = () => {
+const TextInputs: React.FC<TextInputsProps> = ({ textInput, onTextChange }) => {
   return (
     <Stack spacing={4}>
       <Input
+        name='title'
         placeholder='Title'
         fontSize='10pt'
+        value={textInput.title}
+        onChange={onTextChange}
         _focus={{
           outline: "none",
           border: "1px solid",
@@ -16,7 +27,10 @@ const TextInputs: React.FC<TextInputsProps> = () => {
         }}
       />
       <Textarea
+        name='body'
         placeholder='Text(optional)'
+        value={textInput.body}
+        onChange={onTextChange}
         fontSize='10pt'
         h='136px'
         _focus={{
@@ -26,12 +40,14 @@ const TextInputs: React.FC<TextInputsProps> = () => {
         }}
       />
       <Divider />
-      {/* <Flex justify='end' gap={4}>
-        <Button variant='outline' h='30px'>
+      <Flex justify='end' gap={4}>
+        {/* <Button variant='outline' h='30px'>
           Cancle
+        </Button> */}
+        <Button h='30px' disabled={!textInput.title}>
+          Post
         </Button>
-        <Button h='30px'>Post</Button>
-      </Flex> */}
+      </Flex>
     </Stack>
   )
 }
