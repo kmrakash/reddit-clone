@@ -52,9 +52,25 @@ const PostItem: React.FC<PostItemProps> = ({
         py={2}
         align='center'
       >
-        <Icon as={IoArrowUpCircleOutline} fontSize={22} />
+        <Icon
+          as={
+            userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
+          }
+          color={userVoteValue === 1 ? "brand.100" : "gray.400"}
+          cursor='pointer'
+          fontSize={22}
+        />
         <Text>{post.voteStatus}</Text>
-        <Icon as={IoArrowDownCircleOutline} fontSize={22} />
+        <Icon
+          as={
+            userVoteValue === -1
+              ? IoArrowDownCircleSharp
+              : IoArrowDownCircleOutline
+          }
+          color={userVoteValue === -1 ? "#4379ff" : "gray.400"}
+          cursor='pointer'
+          fontSize={22}
+        />
       </Flex>
       <Stack p={2} w='100%'>
         <Flex fontSize='9pt' gap='1'>
