@@ -16,7 +16,7 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
   const router = useRouter()
 
   return (
-    <Box>
+    <Box position='sticky' top='14px'>
       <Flex
         justify='space-between'
         align='center'
