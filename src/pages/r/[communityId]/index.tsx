@@ -1,8 +1,8 @@
 import { doc, getDoc } from "firebase/firestore"
 import { GetServerSidePropsContext } from "next"
 import Head from "next/head"
-import React from "react"
-import { Community } from "../../../atoms/communityAtom"
+import React, { useEffect } from "react"
+import { Community, communityState } from "../../../atoms/communityAtom"
 import { auth, firestore } from "../../../firebase/clientApp"
 import safeJsonStringify from "safe-json-stringify"
 import CommunityNotFound from "../../../components/Community/CommunityNotFound"
@@ -12,6 +12,7 @@ import CreatePostLink from "../../../components/Community/CreatePostLink"
 import { useAuthState } from "react-firebase-hooks/auth"
 import Posts from "../../../components/Post/Posts"
 import About from "../../../components/Community/About"
+import { useSetRecoilState } from "recoil"
 
 type CommunityPageProps = {
   communityData: Community
@@ -19,6 +20,17 @@ type CommunityPageProps = {
 
 const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
   const [user] = useAuthState(auth)
+  const setCommunityStateValue = useSetRecoilState(communityState)
+
+  // update Community State Value on Mount Component
+  useEffect(() => {
+    if (communityData) {
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        currentCommunity: communityData,
+      }))
+    }
+  }, [])
 
   // Not Found Page
   if (!communityData) return <CommunityNotFound />
@@ -31,7 +43,14 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
           name='description'
           content='Reddit Clone using Nextjs Chakra-Ui Firebase Typescript'
         />
-        <link rel='icon' href='/images/redditFace.svg' />
+        <link
+          rel='icon'
+          href={
+            communityData.imageURL
+              ? communityData.imageURL
+              : "/images/redditFace.svg"
+          }
+        />
       </Head>
       <Header communityData={communityData} />
       <PageContent>

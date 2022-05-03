@@ -1,19 +1,81 @@
-import { Box, Button, Divider, Flex, Icon, Stack, Text } from "@chakra-ui/react"
-import React from "react"
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Icon,
+  Stack,
+  Text,
+  Image,
+} from "@chakra-ui/react"
+import React, { useRef, useState } from "react"
 import { Community } from "../../atoms/communityAtom"
 
 import { BsThreeDots } from "react-icons/bs"
 import { RiCakeLine } from "react-icons/ri"
+import { FaReddit } from "react-icons/fa"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import moment from "moment"
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth, firestore, storage } from "../../firebase/clientApp"
+import useSelectFile from "../../hooks/useSelectFile"
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from "firebase/storage"
+import { doc, updateDoc } from "firebase/firestore"
+import { useSetRecoilState } from "recoil"
+import { communityState } from "../../atoms/communityAtom"
 
 type AboutProps = {
   communityData: Community
 }
 
 const About: React.FC<AboutProps> = ({ communityData }) => {
+  const selectedFileRef = useRef<HTMLInputElement>(null)
+  const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile()
+  const [uploadImageLoading, setUploadImageLoading] = useState(false)
+  const setCommunitiesStateValue = useSetRecoilState(communityState)
+
   const router = useRouter()
+  const [user] = useAuthState(auth)
+
+  const onUpdateLogo = async () => {
+    if (!selectedFile) return
+
+    setUploadImageLoading(true)
+    try {
+      if (communityData.imageURL) {
+        const delLogoRef = ref(storage, `communities/${communityData.id}/image`)
+        await deleteObject(delLogoRef)
+      }
+
+      const logoRef = ref(storage, `communities/${communityData.id}/image`)
+      await uploadString(logoRef, selectedFile, "data_url")
+
+      const downloadUrl = await getDownloadURL(logoRef)
+
+      await updateDoc(doc(firestore, "communities", communityData.id), {
+        imageURL: downloadUrl,
+      })
+
+      setCommunitiesStateValue((prev) => ({
+        ...prev,
+        currentCommunity: {
+          ...prev.currentCommunity,
+          imageURL: downloadUrl,
+        } as Community,
+      }))
+
+      setSelectedFile("")
+    } catch (error) {
+      console.log("UploadLogo Error ", error)
+    }
+    setUploadImageLoading(false)
+  }
 
   return (
     <Box position='sticky' top='14px'>
@@ -64,6 +126,53 @@ const About: React.FC<AboutProps> = ({ communityData }) => {
         <Link href={`/r/${router.query.communityId}/submit`} passHref>
           <Button h='30px'>Create Post</Button>
         </Link>
+        {user?.uid === communityData.creatorId && (
+          <>
+            <Divider />
+            <Stack fontSize='10pt' spacing={1}>
+              <Text fontWeight={700}>Admin</Text>
+              <Flex justify='space-between'>
+                <input
+                  type='file'
+                  hidden
+                  accept='image/x-png,image/gif,image/jpeg'
+                  ref={selectedFileRef}
+                  onChange={onSelectFile}
+                />
+                <Button
+                  variant='link'
+                  color='blue.500'
+                  onClick={() => selectedFileRef.current?.click()}
+                >
+                  change image
+                </Button>
+                {selectedFile || communityData.imageURL ? (
+                  <Image
+                    src={selectedFile || communityData.imageURL}
+                    alt='community logo'
+                    boxSize='40px'
+                    borderRadius='full'
+                  />
+                ) : (
+                  <Icon as={FaReddit} fontSize={40} color='brand.100' />
+                )}
+              </Flex>
+              {selectedFile && (
+                <Flex justify='center'>
+                  <Button
+                    variant='outline'
+                    h='24px'
+                    w='50%'
+                    isLoading={uploadImageLoading}
+                    onClick={onUpdateLogo}
+                  >
+                    Save Changes
+                  </Button>
+                </Flex>
+              )}
+            </Stack>
+          </>
+        )}
       </Stack>
     </Box>
   )

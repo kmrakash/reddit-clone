@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Icon, Stack, Text } from "@chakra-ui/react"
+import { Box, Button, Flex, Icon, Stack, Text, Image } from "@chakra-ui/react"
 import React from "react"
 import { FaReddit } from "react-icons/fa"
 import { Community } from "../../atoms/communityAtom"
@@ -21,15 +21,30 @@ const Header: React.FC<HeaderProps> = ({ communityData }) => {
       <Box bg='blue.500' height='50%' />
       <Flex height='50%' justifyContent='center' bg='white'>
         <Flex width='95%' maxWidth='984px'>
-          <Icon
-            as={FaReddit}
-            fontSize={64}
-            position='relative'
-            top={-3}
-            color='blue.500'
-            border='4px solid white'
-            borderRadius='50%'
-          />
+          {communityStateValue.currentCommunity?.imageURL ? (
+            <>
+              <Image
+                src={communityStateValue.currentCommunity.imageURL}
+                alt='community Logo'
+                position='relative'
+                top={-3}
+                bg='white'
+                boxSize='66px'
+                // border='4px solid white'
+                borderRadius='full'
+              />
+            </>
+          ) : (
+            <Icon
+              as={FaReddit}
+              fontSize={64}
+              position='relative'
+              top={-3}
+              color='blue.500'
+              border='4px solid white'
+              borderRadius='50%'
+            />
+          )}
 
           <Flex padding='10px 16px' gap='5'>
             <Stack height='max-content'>
