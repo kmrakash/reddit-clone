@@ -11,6 +11,7 @@ import PageContent from "../../../components/Layout/PageContent"
 import CreatePostLink from "../../../components/Community/CreatePostLink"
 import { useAuthState } from "react-firebase-hooks/auth"
 import Posts from "../../../components/Post/Posts"
+import About from "../../../components/Community/About"
 
 type CommunityPageProps = {
   communityData: Community
@@ -38,7 +39,9 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
           {user && <CreatePostLink />}
           <Posts communityData={communityData} userId={user?.uid} />
         </>
-        <>RHS children</>
+        <>
+          <About communityData={communityData} />
+        </>
       </PageContent>
     </>
   )
