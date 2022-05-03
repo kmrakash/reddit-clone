@@ -13,14 +13,22 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5"
-import { Flex, Icon, Stack, Text, Image, Skeleton } from "@chakra-ui/react"
+import {
+  Flex,
+  Icon,
+  Stack,
+  Text,
+  Image,
+  Skeleton,
+  Spinner,
+} from "@chakra-ui/react"
 import moment from "moment"
 
 type PostItemProps = {
   post: Post
   onVote: () => {}
   onSelectPost: () => void
-  onDeletePost: () => {}
+  onDeletePost: (post: Post) => Promise<boolean>
   userVoteValue: 1 | 0 | -1
   userIsCreator: boolean
 }
@@ -34,6 +42,24 @@ const PostItem: React.FC<PostItemProps> = ({
   userVoteValue,
 }) => {
   const [loadingImage, setLoadingImage] = useState(true)
+  const [loadingDelete, setLoadingDelete] = useState(false)
+
+  // Delete async Event Handler
+  const handleDelete = async () => {
+    setLoadingDelete(true)
+    try {
+      const success = await onDeletePost(post)
+
+      if (!success) {
+        throw new Error("Post could not delete")
+      }
+      console.log("Post has been deleted successfully")
+    } catch (error) {
+      console.log("HandleDelete Error", error)
+    }
+
+    setLoadingDelete(false)
+  }
 
   return (
     <Flex
@@ -146,9 +172,18 @@ const PostItem: React.FC<PostItemProps> = ({
               borderRadius={4}
               p='8px 10px'
               _hover={{ bg: "gray.200" }}
+              onClick={handleDelete}
             >
-              <Icon as={AiOutlineDelete} />
-              <Text>Delete</Text>
+              {loadingDelete ? (
+                <>
+                  <Spinner size='sm' />
+                </>
+              ) : (
+                <>
+                  <Icon as={AiOutlineDelete} />
+                  <Text>Delete</Text>
+                </>
+              )}
             </Flex>
           )}
         </Flex>
