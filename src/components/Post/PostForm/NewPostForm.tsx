@@ -26,6 +26,7 @@ import {
 } from "firebase/firestore"
 import { firestore, storage } from "../../../firebase/clientApp"
 import { getDownloadURL, ref, uploadString } from "firebase/storage"
+import useSelectFile from "../../../hooks/useSelectFile"
 
 type NewPostFormProps = {
   user: User
@@ -55,7 +56,8 @@ const formTabs = [
 ]
 
 const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
-  const [selectedFile, setSelectedFile] = useState<string>("")
+  const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile()
+
   const [textInput, setTextInput] = useState({
     title: "",
     body: "",
@@ -116,20 +118,6 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
     setLoading(false)
   }
 
-  // A function to store data url of files
-  const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader()
-    if (event.target.files?.[0]) {
-      reader.readAsDataURL(event.target.files[0])
-    }
-
-    reader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setSelectedFile(readerEvent.target.result as string)
-      }
-    }
-  }
-
   // Text change Handle Event Function
   const onTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -166,7 +154,7 @@ const NewPostForm: React.FC<NewPostFormProps> = ({ user }) => {
             selectedFile={selectedFile}
             setSelectedFile={setSelectedFile}
             selectFileRef={selectFileRef}
-            onSelectImage={onSelectImage}
+            onSelectImage={onSelectFile}
             handleTabsChange={handleTabsChange}
           />
         </TabPanel>
