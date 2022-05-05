@@ -29,7 +29,7 @@ import { communityState } from "../../atoms/communityAtom"
 type PostItemProps = {
   post: Post
   onVote: (post: Post, vote: 1 | -1) => {}
-  onSelectPost: () => void
+  onSelectPost?: (post: Post) => void
   onDeletePost: (post: Post) => Promise<boolean>
   userVoteValue: 1 | undefined | -1
   userIsCreator: boolean
@@ -73,6 +73,7 @@ const PostItem: React.FC<PostItemProps> = ({
       _hover={{
         borderColor: "black",
       }}
+      onClick={() => onSelectPost && onSelectPost(post)}
     >
       <Flex
         direction='column'

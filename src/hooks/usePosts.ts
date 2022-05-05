@@ -8,6 +8,7 @@ import {
   writeBatch,
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
+import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
@@ -21,8 +22,8 @@ const usePosts = () => {
     useRecoilState<PostState>(postState)
   const [user] = useAuthState(auth)
   const communityStateValue = useRecoilValue(communityState)
-
   const setAuthModalState = useSetRecoilState(authModalState)
+  const router = useRouter()
 
   // Voting Feature
   const onVote = async (post: Post, vote: 1 | -1) => {
@@ -138,7 +139,14 @@ const usePosts = () => {
     }
   }
 
-  const onSelectPost = () => {}
+  const onSelectPost = (post: Post) => {
+    setPostStateValue((prev) => ({
+      ...prev,
+      selectedPost: post,
+    }))
+    router.push(`/r/${post.communityId}/comments/${post.id}`)
+  }
+
   const onDeletePost = async (post: Post) => {
     try {
       // check if image, delete if exists
