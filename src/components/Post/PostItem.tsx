@@ -23,6 +23,8 @@ import {
   Spinner,
 } from "@chakra-ui/react"
 import moment from "moment"
+import { useRecoilValue } from "recoil"
+import { communityState } from "../../atoms/communityAtom"
 
 type PostItemProps = {
   post: Post
@@ -43,6 +45,7 @@ const PostItem: React.FC<PostItemProps> = ({
 }) => {
   const [loadingImage, setLoadingImage] = useState(true)
   const [loadingDelete, setLoadingDelete] = useState(false)
+  const communityStateValue = useRecoilValue(communityState)
 
   // Delete async Event Handler
   const handleDelete = async () => {
@@ -105,7 +108,17 @@ const PostItem: React.FC<PostItemProps> = ({
       <Stack p={2} w='100%'>
         <Flex fontSize='9pt' gap='1'>
           {/* Icon */}
-          <Icon as={FaReddit} fontSize={18} color='blue.500' />
+          {communityStateValue.currentCommunity?.imageURL ? (
+            <>
+              <Image
+                src={communityStateValue.currentCommunity?.imageURL}
+                alt=' community logo '
+                w='20px'
+              />
+            </>
+          ) : (
+            <Icon as={FaReddit} fontSize={18} color='blue.500' />
+          )}
           <Text>
             <strong>r/{post.communityId}</strong>
           </Text>
