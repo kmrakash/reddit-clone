@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore"
 import { deleteObject, ref } from "firebase/storage"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import React, { useEffect } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { authModalState } from "../atoms/authModalAtom"
@@ -26,7 +26,14 @@ const usePosts = () => {
   const router = useRouter()
 
   // Voting Feature
-  const onVote = async (post: Post, vote: 1 | -1) => {
+  const onVote = async (
+    event: React.MouseEvent<SVGElement | MouseEvent>,
+    post: Post,
+    vote: 1 | -1
+  ) => {
+    // prevent from event bubbling
+    event.stopPropagation()
+
     const { communityId } = post
 
     // if user is not authenticated open modal for them

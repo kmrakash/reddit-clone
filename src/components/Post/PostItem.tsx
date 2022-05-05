@@ -25,10 +25,15 @@ import {
 import moment from "moment"
 import { useRecoilValue } from "recoil"
 import { communityState } from "../../atoms/communityAtom"
+import { useRouter } from "next/router"
 
 type PostItemProps = {
   post: Post
-  onVote: (post: Post, vote: 1 | -1) => {}
+  onVote: (
+    event: React.MouseEvent<SVGElement | MouseEvent>,
+    post: Post,
+    vote: 1 | -1
+  ) => {}
   onSelectPost?: (post: Post) => void
   onDeletePost: (post: Post) => Promise<boolean>
   userVoteValue: 1 | undefined | -1
@@ -46,9 +51,15 @@ const PostItem: React.FC<PostItemProps> = ({
   const [loadingImage, setLoadingImage] = useState(true)
   const [loadingDelete, setLoadingDelete] = useState(false)
   const communityStateValue = useRecoilValue(communityState)
+  const router = useRouter()
+  // A condition to check if component is in singlePage Post
+  const singlePage = !onSelectPost
 
   // Delete async Event Handler
-  const handleDelete = async () => {
+  const handleDelete = async (
+    event: React.MouseEvent<HTMLDivElement | MouseEvent>
+  ) => {
+    event.stopPropagation()
     setLoadingDelete(true)
     try {
       const success = await onDeletePost(post)
@@ -57,6 +68,9 @@ const PostItem: React.FC<PostItemProps> = ({
         throw new Error("Post could not delete")
       }
       console.log("Post has been deleted successfully")
+      if (singlePage) {
+        router.push(`/r/${post.communityId}`)
+      }
     } catch (error) {
       console.log("HandleDelete Error", error)
     }
@@ -68,15 +82,17 @@ const PostItem: React.FC<PostItemProps> = ({
     <Flex
       bg='white'
       border='1px solid'
-      borderRadius={4}
-      borderColor='gray.300'
+      borderRadius={singlePage ? "4px 4px 0px 0px" : "4px"}
+      borderColor={singlePage ? "white" : "gray.300"}
       _hover={{
-        borderColor: "black",
+        borderColor: singlePage ? "none" : "gray.500",
       }}
+      onClick={() => onSelectPost && onSelectPost(post)}
     >
       <Flex
         direction='column'
-        bg='gray.200'
+        bg={singlePage ? "white" : "gray.200"}
+        borderRadius={singlePage ? "0" : "3px 0px 0px 3px"}
         w='48px'
         color='gray.500'
         // justify='center'
@@ -90,7 +106,7 @@ const PostItem: React.FC<PostItemProps> = ({
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
           cursor='pointer'
           fontSize={22}
-          onClick={() => onVote(post, 1)}
+          onClick={(event) => onVote(event, post, 1)}
         />
         <Text>{post.voteStatus}</Text>
         <Icon
@@ -102,10 +118,10 @@ const PostItem: React.FC<PostItemProps> = ({
           color={userVoteValue === -1 ? "#4379ff" : "gray.400"}
           cursor='pointer'
           fontSize={22}
-          onClick={() => onVote(post, -1)}
+          onClick={(event) => onVote(event, post, -1)}
         />
       </Flex>
-      <Stack p={2} w='100%' onClick={() => onSelectPost && onSelectPost(post)}>
+      <Stack p={2} w='100%'>
         <Flex fontSize='9pt' gap='1'>
           {/* Icon */}
           {communityStateValue.currentCommunity?.imageURL ? (
@@ -187,7 +203,7 @@ const PostItem: React.FC<PostItemProps> = ({
               borderRadius={4}
               p='8px 10px'
               _hover={{ bg: "gray.200" }}
-              onClick={handleDelete}
+              onClick={(event) => handleDelete(event)}
             >
               {loadingDelete ? (
                 <>
