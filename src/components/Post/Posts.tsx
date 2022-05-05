@@ -70,7 +70,11 @@ const Posts: React.FC<PostsProps> = ({ communityData, userId }) => {
                 onSelectPost={onSelectPost}
                 onDeletePost={onDeletePost}
                 userIsCreator={userId === post.creatorId}
-                userVoteValue={0}
+                userVoteValue={
+                  postStateValue.postVotes.find(
+                    (item) => item.postId === post.id
+                  )?.voteValue
+                }
               />
             )
           })}

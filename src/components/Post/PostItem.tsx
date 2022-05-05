@@ -26,10 +26,10 @@ import moment from "moment"
 
 type PostItemProps = {
   post: Post
-  onVote: () => {}
+  onVote: (post: Post, vote: 1 | -1) => {}
   onSelectPost: () => void
   onDeletePost: (post: Post) => Promise<boolean>
-  userVoteValue: 1 | 0 | -1
+  userVoteValue: 1 | undefined | -1
   userIsCreator: boolean
 }
 
@@ -87,6 +87,7 @@ const PostItem: React.FC<PostItemProps> = ({
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
           cursor='pointer'
           fontSize={22}
+          onClick={() => onVote(post, 1)}
         />
         <Text>{post.voteStatus}</Text>
         <Icon
@@ -98,6 +99,7 @@ const PostItem: React.FC<PostItemProps> = ({
           color={userVoteValue === -1 ? "#4379ff" : "gray.400"}
           cursor='pointer'
           fontSize={22}
+          onClick={() => onVote(post, -1)}
         />
       </Flex>
       <Stack p={2} w='100%'>
