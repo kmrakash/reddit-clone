@@ -133,6 +133,7 @@ const usePosts = () => {
         ...prev,
         posts: updatedPostArray,
         postVotes: updatedPostVoteArray,
+        selectedPost: prev.selectedPost ? updatedPost : null,
       }))
     } catch (error) {
       console.log("on Vote Error -->", error)

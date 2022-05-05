@@ -73,7 +73,6 @@ const PostItem: React.FC<PostItemProps> = ({
       _hover={{
         borderColor: "black",
       }}
-      onClick={() => onSelectPost && onSelectPost(post)}
     >
       <Flex
         direction='column'
@@ -106,7 +105,7 @@ const PostItem: React.FC<PostItemProps> = ({
           onClick={() => onVote(post, -1)}
         />
       </Flex>
-      <Stack p={2} w='100%'>
+      <Stack p={2} w='100%' onClick={() => onSelectPost && onSelectPost(post)}>
         <Flex fontSize='9pt' gap='1'>
           {/* Icon */}
           {communityStateValue.currentCommunity?.imageURL ? (
