@@ -23,9 +23,8 @@ import {
   Spinner,
 } from "@chakra-ui/react"
 import moment from "moment"
-import { useRecoilValue } from "recoil"
-import { communityState } from "../../atoms/communityAtom"
 import { useRouter } from "next/router"
+import useCommunityData from "../../hooks/useCommunityData"
 
 type PostItemProps = {
   post: Post
@@ -50,7 +49,8 @@ const PostItem: React.FC<PostItemProps> = ({
 }) => {
   const [loadingImage, setLoadingImage] = useState(true)
   const [loadingDelete, setLoadingDelete] = useState(false)
-  const communityStateValue = useRecoilValue(communityState)
+  const { communityStateValue } = useCommunityData()
+
   const router = useRouter()
   // A condition to check if component is in singlePage Post
   const singlePage = !onSelectPost

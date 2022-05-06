@@ -1,10 +1,12 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   increment,
   writeBatch,
 } from "firebase/firestore"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useAuthState } from "react-firebase-hooks/auth"
 import { useRecoilState, useSetRecoilState } from "recoil"
@@ -21,7 +23,7 @@ const useCommunityData = () => {
   const setAuthStateModal = useSetRecoilState(authModalState)
   const [communityStateValue, setCommunityStateValue] =
     useRecoilState(communityState)
-
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -135,6 +137,32 @@ const useCommunityData = () => {
       getMySnippets()
     }
   }, [user])
+
+  // fetch currentCommunity on refresh or direct link access
+  const getCurrentCommunity = async (communityId: string) => {
+    try {
+      const communityDocRef = doc(firestore, "communities", communityId)
+      const communityDoc = await getDoc(communityDocRef)
+
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        currentCommunity: {
+          id: communityDoc.id,
+          ...communityDoc.data(),
+        } as Community,
+      }))
+    } catch (error) {
+      console.log("fetch current community", error)
+    }
+  }
+
+  useEffect(() => {
+    const { communityId } = router.query
+
+    if (communityId && !communityStateValue.currentCommunity) {
+      getCurrentCommunity(communityId as string)
+    }
+  }, [router.query, communityStateValue.currentCommunity])
 
   return {
     communityStateValue,
